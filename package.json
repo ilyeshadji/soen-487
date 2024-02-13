@@ -1,0 +1,24 @@
+{
+  "name": "soen-487-book-inventory",
+  "version": "1.0.0",
+  "description": "assignment 1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js",
+    "prettier": "prettier --write ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "helmet": "^7.1.0",
+    "method-override": "^3.0.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.9.1",
+    "nodemon": "^3.0.3",
+    "prettier": "^3.2.5"
+  }
+}

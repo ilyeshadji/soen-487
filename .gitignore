@@ -1,0 +1,5 @@
+#No modules
+.idea
+node_modules
+nodemon.json
+package-lock.json

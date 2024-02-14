@@ -1,24 +1,23 @@
-const { endConnection, connection } = require("../middlewares/connection");
-const HttpError = require("../models/http-error");
+const { endConnection, connection } = require('../middlewares/connection');
+const HttpError = require('../models/http-error');
 
 const createBook = async (req, res, next) => {
-  console.log(connection);
-  try {
-    throw new Error("yo");
-
-    const [rows] = connection.query("SELECT * FROM books ");
-  } catch (e) {
-    return next(new HttpError("Something went wrong", 404));
-  }
-  res.send(200);
-  endConnection();
+    res.status(200).json({ message: 'created' });
 };
 
-const getBook = async (req, res, next) => {};
+const getBook = async (req, res, next) => {
+    res.status(200).json({ books: [] });
+};
 
-const deleteBook = async (req, res, next) => {};
+const deleteBook = async (req, res, next) => {
+    res.status(200).json({
+        message: `Book with id ${req.params.id} deleted`,
+    });
+};
 
-const updateBook = async (req, res, next) => {};
+const updateBook = async (req, res, next) => {
+    res.status(200).json({ message: `Book with id ${req.params.id} updated ` });
+};
 
 exports.createBook = createBook;
 exports.getBook = getBook;

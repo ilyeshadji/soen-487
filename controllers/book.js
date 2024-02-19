@@ -3,7 +3,7 @@ const HttpError = require('../models/http-error');
 
 //use fs functions for now until db set up works 
 const fs = require('fs');
-
+const {getBook,createBook,deleteBook,updateBook} = require('./connection');
 //should be fetching from a database but for now get from the json file
 let books = JSON.parse(fs.readFileSync('./data/books.json'));
 

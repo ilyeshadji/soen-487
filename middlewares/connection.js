@@ -30,6 +30,66 @@ const endConnection = () => {
     console.log('Connection ended');
 };
 
+async function getBooks(){
+    const connection = startConnection;
+    try {
+        const [rows, fields] = await connection.execute('SELECT * FROM book');
+        return rows;
+    } catch (error) {
+        console.error('Error fetching books:', error.message);
+    } finally {
+        await connection.end();
+    }
+}
+async function createBook(){
+    const connection = startConnection;
+    try {
+        const [result, fields] = await connection.execute(
+            `INSERT INTO book (name, author, year) VALUES (?, ?, ?)`,
+            [name, author, year]
+        );
+        return result.affectedRows === 1; // Check if the insertion was successful
+    } catch (error) {
+        console.error('Error creating book:', error.message);
+        return false;
+    } finally {
+        await connection.end();
+    }
+}
+async function deleteBook(){
+    const connection = startConnection;
+    try {
+        const [result, fields] = await connection.execute(
+            `DELETE FROM book WHERE id = ?`,
+            [bookId]
+        );
+        return result.affectedRows === 1; // Check if the deletion was successful
+    } catch (error) {
+        console.error('Error deleting book:', error.message);
+        return false;
+    } finally {
+        await connection.end();
+    }
+}
+async function updateBook(){
+    const connection = startConnection;
+    try {
+        const [result, fields] = await connection.execute(
+            `UPDATE book SET ${fieldName} = ? WHERE id = ?`,
+            [newValue, bookId]
+        );
+        return result.affectedRows === 1; // Check if the update was successful
+    } catch (error) {
+        console.error('Error updating book field:', error.message);
+        return false;
+    } finally {
+        await connection.end();
+    }
+}
 exports.startConnection = startConnection;
+exports.getBooks = getBooks;
+exports.createBook = createBook;
+exports.deleteBook = deleteBook;
+exports.updateBook = updateBook;
 exports.endConnection = endConnection;
 exports.connection = connection;

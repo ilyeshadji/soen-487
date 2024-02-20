@@ -1,6 +1,4 @@
 const {
-    endConnection,
-    connection,
     getBooksJob,
     createBookJob,
     updateBookJob,
@@ -8,63 +6,57 @@ const {
 } = require('../middlewares/connection');
 const HttpError = require('../models/http-error');
 
-//use fs functions for now until db set up works 
-const fs = require('fs');
-//should be fetching from a database but for now get from the json file
-let books = JSON.parse(fs.readFileSync('./data/books.json'));
-
 const createBook = async (req, res, next) => {
-    //need to implement the mysql2 still
-    const aaa = await createBookJob(req.body);
+    const {name, author, year} = req.body
 
-    //newid autoincrement 
-    const newId = books[books.length * 1] + 1;
-    //getting the object from the request 
-    const newBook = Object.assign({id: newId}, req.body);
+    if (!name || !author || !year) {
+        return next(new HttpError("Could not create book", 400))
+    }
 
-    books.push(newBook);
+    const book = await createBookJob({name, author, year});
 
-    fs.writeFile('./data/books.json', JSON.stringify(books));
+    if (!book) {
+        return next(new HttpError("Could not create book", 500))
+    }
+
     res.status(200).json({
-        status: "sucess",
+        status: "success",
         message: 'created',
         data: {
-            book: newBook
+            book
         }
     });
 };
 
 const getBook = async (req, res, next) => {
-    const aaa = await getBooksJob();
+    const books = await getBooksJob();
 
-    console.log(aaa)
+    if (!books) {
+        return next(new HttpError("Could not fetch books", 500))
+    }
 
     res.status(200).json({
-        status: "sucess",
+        status: "success",
         count: books.length,
         data: {
-            books: books
+            books
         }
     });
 };
+
 const deleteBook = async (req, res, next) => {
     const id = req.param.id * 1;
-    const bookToDelete = books.find(ei => ei.id === id);
 
-    if (!bookToDelete) {
-        return res.status(404).json({
-            status: 'fail',
-            message: 'No Book object found with ID ' + id + ' is found to delete!'
-        })
+    if (!id) {
+        return next(new HttpError("Could not delete book", 400))
     }
 
-    const index = books.indexOf(bookToDelete);
+    const success = await deleteBookJob(id);
 
-    //get the first parameter 
-    books.splice(index, 1);
+    if (!success) {
+        return next(new HttpError("Could not delete book", 500))
+    }
 
-    //write it to the data file/database 
-    fs.writeFile('./data/books.json', JSON.stringify(books));
     res.status(200).json({
         message: `Book with id ${req.params.id} deleted`,
     });
@@ -73,24 +65,18 @@ const deleteBook = async (req, res, next) => {
 };
 
 const updateBook = async (req, res, next) => {
-
     let id = req.params.id * 1;
-    //again need to implement the mysql2 instead of fetching from the json
-    let bookToUpdate = books.find(ei => ei.id === id);
+    const {fieldName, newValue} = req.body;
 
-    if (!bookToUpdate) {
-        return res.status(404).json({
-            status: 'fail',
-            message: 'No Book object found with ID ' + id + ' is found to update!'
-        })
+    if (!id || !fieldName || !newValue) {
+        return next(new HttpError("Could not update book", 400))
     }
-    let index = book.indexOf(bookToUpdate); //e.g : id = 4 , index = 3 
 
-    Object.assign(bookToUpdate, req.body);
+    const bookUpdated = await updateBook(fieldName, newValue, id)
 
-    books[index] = bookToUpdate;
-
-    fs.writeFile('./data/books.json', JSON.stringify(books));
+    if (!bookUpdated) {
+        return next(new HttpError("Could not update book", 500))
+    }
 
     res.status(200).json({message: `Book with id ${req.params.id} updated `});
 };

@@ -22,7 +22,7 @@ describe('Books API', () => {
       .send({
         name: 'some name',
         author: 'some author',
-        year: new Date(),
+        year: "2020-01-01",
       })
       .expect('Content-Type', /json/)
       .expect(200);
@@ -35,9 +35,9 @@ describe('Books API', () => {
       .expect('Content-Type', /json/);
   });
 
-  it('PUT/ should update an existing book', async () => {
+  it('PATCH/ should update an existing book', async () => {
     return await request(server)
-      .put('/api/inventory/book/1').send({ name: 'some updated name' })
+      .patch('/api/inventory/book/1').send({ name: 'some updated name' })
       .expect(200)
       .expect('Content-Type', /json/);
   });

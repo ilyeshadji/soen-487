@@ -32,7 +32,7 @@ const getBook = async (req, res, next) => {
     const books = await getBooksJob();
 
     if (!books) {
-        return next(new HttpError("Could not fetch books", 500))
+        return next(new HttpError("No books found", 404))
     }
 
     res.status(200).json({
@@ -46,8 +46,6 @@ const getBook = async (req, res, next) => {
 
 const deleteBook = async (req, res, next) => {
     const {id} = req.params;
-    console.log(id);
-    console.log(req.params);
 
     if (!id) {
         return next(new HttpError("Could not delete book", 400))

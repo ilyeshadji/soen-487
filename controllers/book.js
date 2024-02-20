@@ -15,6 +15,8 @@ let books = JSON.parse(fs.readFileSync('./data/books.json'));
 
 const createBook = async (req, res, next) => {
     //need to implement the mysql2 still
+    const aaa = await createBookJob(req.body);
+
     //newid autoincrement 
     const newId = books[books.length * 1] + 1;
     //getting the object from the request 

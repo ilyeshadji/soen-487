@@ -1,9 +1,8 @@
-const { endConnection, connection } = require('../middlewares/connection');
+const { endConnection, connection,getBooksJob,createBookJob,updateBookJob,deleteBookJob } = require('../middlewares/connection');
 const HttpError = require('../models/http-error');
 
 //use fs functions for now until db set up works 
 const fs = require('fs');
-const {getBook,createBook,deleteBook,updateBook} = require('./connection');
 //should be fetching from a database but for now get from the json file
 let books = JSON.parse(fs.readFileSync('./data/books.json'));
 
@@ -35,7 +34,6 @@ const getBook = async (req, res, next) => {
         }
     });
 };
-
 const deleteBook = async (req, res, next) => {
     const id = req.param.id * 1;
     const bookToDelete = books.find(ei => ei.id === id);

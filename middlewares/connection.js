@@ -30,7 +30,7 @@ const endConnection = () => {
     console.log('Connection ended');
 };
 
-async function getBooks(){
+async function getBooksJob(){
     const connection = startConnection;
     try {
         const [rows, fields] = await connection.execute('SELECT * FROM book');
@@ -41,7 +41,7 @@ async function getBooks(){
         await connection.end();
     }
 }
-async function createBook(){
+async function createBookJob(){
     const connection = startConnection;
     try {
         const [result, fields] = await connection.execute(
@@ -56,7 +56,7 @@ async function createBook(){
         await connection.end();
     }
 }
-async function deleteBook(){
+async function deleteBookJob(){
     const connection = startConnection;
     try {
         const [result, fields] = await connection.execute(
@@ -71,7 +71,7 @@ async function deleteBook(){
         await connection.end();
     }
 }
-async function updateBook(){
+async function updateBookJob(){
     const connection = startConnection;
     try {
         const [result, fields] = await connection.execute(
@@ -87,9 +87,9 @@ async function updateBook(){
     }
 }
 exports.startConnection = startConnection;
-exports.getBooks = getBooks;
-exports.createBook = createBook;
-exports.deleteBook = deleteBook;
-exports.updateBook = updateBook;
+exports.getBooksJob = getBooksJob;
+exports.createBookJob = createBookJob;
+exports.deleteBookJob = deleteBookJob;
+exports.updateBookJob = updateBookJob;
 exports.endConnection = endConnection;
 exports.connection = connection;

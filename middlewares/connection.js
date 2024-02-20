@@ -1,19 +1,22 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 
 const startConnection = async (req, res, next) => {
     return mysql.createConnection({
         host: 'localhost', // process.env.DB_HOST
         user: 'root',
-        database: 'password',
+        database: 'books_inventory',
+        password: 'Truewar5776_'
     });
 };
 
 async function getBooksJob() {
-    const connection = await startConnection;
+   
     try {
+        const connection = await startConnection();
         const [rows, fields] = await connection.execute('SELECT * FROM book');
         return rows;
     } catch (error) {
+        console.log(error.message);
         console.error('Error fetching books:', error.message);
     }
 }

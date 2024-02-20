@@ -21,8 +21,8 @@ async function getBooksJob() {
 }
 
 async function createBookJob({name, author, year}) {
-    const connection = await startConnection;
     try {
+        const connection = await startConnection();
         const [result, fields] = await connection.execute(
             `INSERT INTO book (name, author, year) VALUES (?, ?, ?)`,
             [name, author, year]
@@ -37,8 +37,8 @@ async function createBookJob({name, author, year}) {
 }
 
 async function deleteBookJob(bookId) {
-    const connection = await startConnection;
     try {
+        const connection = await startConnection();
         const [result, fields] = await connection.execute(
             `DELETE FROM book WHERE id = ?`,
             [bookId]
@@ -52,8 +52,8 @@ async function deleteBookJob(bookId) {
 }
 
 async function updateBookJob(fieldName, newValue, bookId) {
-    const connection = await startConnection;
     try {
+        const connection = await startConnection();
         const [result, fields] = await connection.execute(
             `UPDATE book SET ${fieldName} = ? WHERE id = ?`,
             [newValue, bookId]

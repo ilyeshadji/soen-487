@@ -45,7 +45,9 @@ const getBook = async (req, res, next) => {
 };
 
 const deleteBook = async (req, res, next) => {
-    const id = req.param.id * 1;
+    const {id} = req.params;
+    console.log(id);
+    console.log(req.params);
 
     if (!id) {
         return next(new HttpError("Could not delete book", 400))
@@ -72,7 +74,7 @@ const updateBook = async (req, res, next) => {
         return next(new HttpError("Could not update book", 400))
     }
 
-    const bookUpdated = await updateBook(fieldName, newValue, id)
+    const bookUpdated = await updateBookJob(fieldName, newValue, id)
 
     if (!bookUpdated) {
         return next(new HttpError("Could not update book", 500))

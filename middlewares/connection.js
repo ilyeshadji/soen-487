@@ -1,48 +1,25 @@
-const mysql_connector = require('mysql2');
-
-let connection;
+const mysql = require('mysql2');
 
 const startConnection = async (req, res, next) => {
-    connection = mysql_connector.createConnection({
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
-        charset: 'utf8mb4',
+    return mysql.createConnection({
+        host: 'localhost', // process.env.DB_HOST
+        user: 'root',
+        database: 'password',
     });
-
-    connection.connect((err) => {
-        console.error('Error Connecting:' + err.stack);
-
-        connection.end();
-
-        return;
-    });
-
-    console.log('Connected');
-
-    next();
 };
 
-const endConnection = () => {
-    connection.end((err) => console.error(err));
-
-    console.log('Connection ended');
-};
-
-async function getBooksJob(){
-    const connection = startConnection;
+async function getBooksJob() {
+    const connection = await startConnection;
     try {
         const [rows, fields] = await connection.execute('SELECT * FROM book');
         return rows;
     } catch (error) {
         console.error('Error fetching books:', error.message);
-    } finally {
-        await connection.end();
     }
 }
-async function createBookJob(){
-    const connection = startConnection;
+
+async function createBookJob() {
+    const connection = await startConnection;
     try {
         const [result, fields] = await connection.execute(
             `INSERT INTO book (name, author, year) VALUES (?, ?, ?)`,
@@ -52,12 +29,11 @@ async function createBookJob(){
     } catch (error) {
         console.error('Error creating book:', error.message);
         return false;
-    } finally {
-        await connection.end();
     }
 }
-async function deleteBookJob(){
-    const connection = startConnection;
+
+async function deleteBookJob() {
+    const connection = await startConnection;
     try {
         const [result, fields] = await connection.execute(
             `DELETE FROM book WHERE id = ?`,
@@ -67,12 +43,11 @@ async function deleteBookJob(){
     } catch (error) {
         console.error('Error deleting book:', error.message);
         return false;
-    } finally {
-        await connection.end();
     }
 }
-async function updateBookJob(){
-    const connection = startConnection;
+
+async function updateBookJob() {
+    const connection = await startConnection;
     try {
         const [result, fields] = await connection.execute(
             `UPDATE book SET ${fieldName} = ? WHERE id = ?`,
@@ -82,14 +57,10 @@ async function updateBookJob(){
     } catch (error) {
         console.error('Error updating book field:', error.message);
         return false;
-    } finally {
-        await connection.end();
     }
 }
-exports.startConnection = startConnection;
+
 exports.getBooksJob = getBooksJob;
 exports.createBookJob = createBookJob;
 exports.deleteBookJob = deleteBookJob;
 exports.updateBookJob = updateBookJob;
-exports.endConnection = endConnection;
-exports.connection = connection;

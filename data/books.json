@@ -1,0 +1,27 @@
+[
+  {
+    "name": "To Kill a Mockingbird",
+    "author": "Harper Lee",
+    "year": "1960-01-01"
+  },
+  {
+    "name": "1984",
+    "author": "George Orwell",
+    "year": "1949-01-01"
+  },
+  {
+    "name": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "year": "1925-01-01"
+  },
+  {
+    "name": "Pride and Prejudice",
+    "author": "Jane Austen",
+    "year": "1813-01-01"
+  },
+  {
+    "name": "The Catcher in the Rye",
+    "author": "J.D. Salinger",
+    "year": "1951-01-01"
+  }
+]

@@ -1,35 +1,73 @@
-const mysql_connector = require('mysql2');
-
-let connection;
+const mysql = require('mysql2/promise');
 
 const startConnection = async (req, res, next) => {
-    connection = mysql_connector.createConnection({
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
-        charset: 'utf8mb4',
+    return mysql.createConnection({
+        host: 'localhost', // process.env.DB_HOST
+        user: 'root',
+        database: 'books_inventory',
+        password: 'Truewar5776_'
     });
-
-    connection.connect((err) => {
-        console.error('Error Connecting:' + err.stack);
-
-        connection.end();
-
-        return;
-    });
-
-    console.log('Connected');
-
-    next();
 };
 
-const endConnection = () => {
-    connection.end((err) => console.error(err));
+async function getBooksJob() {
+    try {
+        const connection = await startConnection();
+        const [rows, fields] = await connection.execute('SELECT * FROM book');
+        return rows;
+    } catch (error) {
+        console.log(error.message);
+        console.error('Error fetching books:', error.message);
+    }
+}
 
-    console.log('Connection ended');
-};
+async function createBookJob({name, author, year}) {
+    try {
+        const connection = await startConnection();
+        const [result, fields] = await connection.execute(
+            `INSERT INTO book (name, author, year) VALUES (?, ?, ?)`,
+            [name, author, year]
+        );
 
-exports.startConnection = startConnection;
-exports.endConnection = endConnection;
-exports.connection = connection;
+        // TODO: return book
+        return result.affectedRows === 1; // Check if the insertion was successful
+    } catch (error) {
+        console.error('Error creating book:', error.message);
+        return false;
+    }
+}
+
+async function deleteBookJob(bookId) {
+    try {
+        const connection = await startConnection();
+        const [result, fields] = await connection.execute(
+            `DELETE FROM book WHERE id = ?`,
+            [bookId]
+        );
+
+        return result.affectedRows === 1; // Check if the deletion was successful
+    } catch (error) {
+        console.error('Error deleting book:', error.message);
+        return false;
+    }
+}
+
+async function updateBookJob(fieldName, newValue, bookId) {
+    try {
+        const connection = await startConnection();
+        const [result, fields] = await connection.execute(
+            `UPDATE book SET ${fieldName} = ? WHERE id = ?`,
+            [newValue, bookId]
+        );
+
+        // TODO: return updated book
+        return result.affectedRows === 1; // Check if the update was successful
+    } catch (error) {
+        console.error('Error updating book field:', error.message);
+        return false;
+    }
+}
+
+exports.getBooksJob = getBooksJob;
+exports.createBookJob = createBookJob;
+exports.deleteBookJob = deleteBookJob;
+exports.updateBookJob = updateBookJob;

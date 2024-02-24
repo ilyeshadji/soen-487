@@ -9,12 +9,10 @@ const bookController = require('../controllers/book');
 router.delete('/book/:id', bookController.deleteBook);
 router.patch('/book/:id', bookController.updateBook);
 
-
 //re-organize the routes
-router.route('/book')
+router
+    .route('/book')
     .get(bookController.getBook)
-    .post(bookController.createBook)
-
-
+    .post(bookController.createBook);
 
 module.exports = router;
